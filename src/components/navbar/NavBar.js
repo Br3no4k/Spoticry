@@ -1,6 +1,5 @@
 import React from 'react';
 import './NavBar.css';
-
 import { useState, useEffect } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import logo from '../../assets/img/spoticrylogonav.png';
@@ -45,7 +44,7 @@ export const NavBar = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
               <Nav.Link href="#home" className={activeLink === 'home' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('home')}>Home</Nav.Link>
-              <Nav.Link href="#tops" className={activeLink === 'top' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('top')}>Top</Nav.Link>
+
             </Nav>
             <span className="navbar-text">
               <HashLink to='#connect'>
