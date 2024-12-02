@@ -49,7 +49,7 @@ const truncateName = (name) => {
 
 const PlaylistCard = ({ playlist }) => (
   <PlaylistCardContainer>
-    <PlaylistLink to={/playlists/${playlist._id}}>
+    <PlaylistLink to={`/playlists/${playlist._id}`}>
       <PlaylistImage 
         src="https://picsum.photos/200/120" 
         alt={playlist._name} 

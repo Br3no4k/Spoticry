@@ -71,7 +71,7 @@ const EditPlaylistComponent = ({ playlistId, initialPlaylistName, onClose }) => 
 
       // Enviar apenas o campo "name" para a requisição PATCH
       await axios.patch(
-        https://mqjnto3qw2.execute-api.us-east-1.amazonaws.com/default/playlist/${playlistId},
+        `https://mqjnto3qw2.execute-api.us-east-1.amazonaws.com/default/playlist/${playlistId}`,
         {
           name: updatedName, // Apenas o campo "name"
         },

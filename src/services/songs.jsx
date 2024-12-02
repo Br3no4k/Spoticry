@@ -35,7 +35,7 @@ export async function addSong(songData) {
 export async function editSong(songId, songData) {
     try {
         const token = getToken();
-        const response = await api.put(/song/${songId}, songData, {
+        const response = await api.put(`/song/${songId}`, songData, {
             headers: {
                 Authorization: token,
             },
@@ -50,7 +50,7 @@ export async function editSong(songId, songData) {
 export async function deleteSong(songId) {
     try {
         const token = getToken();
-        const response = await api.delete(/song/${songId}, {
+        const response = await api.delete(`/song/${songId}`, {
             headers: {
                 Authorization: token,
             },

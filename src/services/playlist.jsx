@@ -32,7 +32,7 @@ export function addPlaylist(playlistData) {
 //MÉTODO PARA EDITAR UMA PLAYLIST
 export function editPlaylist(playlistId, playlistData) {
     const token = getToken();
-    return api.put(/playlist/${playlistId}, playlistData, {
+    return api.put(`/playlist/${playlistId}`, playlistData, {
         headers: {
             Authorization: token
         }
@@ -43,7 +43,7 @@ export function editPlaylist(playlistId, playlistData) {
 //MÉTODO PARA DELETAR UMA PLAYLIST
 export function deletePlaylist(playlistId) {
     const token = getToken();
-    return api.delete(/playlist/${playlistId}, {
+    return api.delete(`/playlist/${playlistId}`, {
         headers: {
             Authorization: token
         }
@@ -54,7 +54,7 @@ export function deletePlaylist(playlistId) {
 //MÉTODO PARA ADICIONAR UMA MUSICA A PLAYLIST
 export function addSongPlaylist(playlistId, songId) {
     const token = getToken();
-    return api.post(/playlist/${playlistId}/song, { songId }, {
+    return api.post(`/playlist/${playlistId}/song`, { songId }, {
         headers: {
             Authorization: token
         }
@@ -65,7 +65,7 @@ export function addSongPlaylist(playlistId, songId) {
 //MÉTODO PARA DELETAR UMA MUSICA DA PLAYLIST
 export function deleteSongPlaylist(playlistId, songId) {
     const token = getToken();
-    return api.delete(/playlist/${playlistId}/song/${songId}, {
+    return api.delete(`/playlist/${playlistId}/song/${songId}`, {
         headers: {
             Authorization: token
         }

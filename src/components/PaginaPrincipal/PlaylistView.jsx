@@ -43,7 +43,7 @@ function PlaylistView() {
         const userId = decodedToken?.id;
 
         const response = await axios.get(
-          https://mqjnto3qw2.execute-api.us-east-1.amazonaws.com/default/playlist/${id},
+          `https://mqjnto3qw2.execute-api.us-east-1.amazonaws.com/default/playlist/${id}`,
           { headers: { Authorization: token } }
         );
 
@@ -55,13 +55,13 @@ function PlaylistView() {
         const musicDetailsPromises = playlistData._songs.map(async (songId) => {
           try {
             const songResponse = await axios.get(
-              https://mqjnto3qw2.execute-api.us-east-1.amazonaws.com/default/song/${songId},
+              `https://mqjnto3qw2.execute-api.us-east-1.amazonaws.com/default/song/${songId}`,
               { headers: { Authorization: token } }
             );
             return songResponse.data.song;
           } catch (err) {
-            console.error(Erro ao carregar a música ${songId}:, err);
-            return null;
+            console.error(`Erro ao carregar a música ${songId}:`, err);
+            return null; // Retorna null caso ocorra um erro
           }
         });
 
@@ -123,9 +123,9 @@ function PlaylistView() {
               <PlaylistInfo>
                 {playlist?._songs[0] ? (
                   <PlaylistImage
-                    src={https://img.youtube.com/vi/${playlist?._songs[0]}/hqdefault.jpg}
-                    alt={playlist?.name}
-                  />
+                  src={`https://img.youtube.com/vi/${playlist?._songs[0]}/hqdefault.jpg`}
+                  alt={playlist?.name}
+                />
                 ) : (
                   <DefaultImage>Padrão</DefaultImage>
                 )}
@@ -164,10 +164,10 @@ function PlaylistView() {
                     <tr key={song.id}>
                       <td>{index + 1}</td>
                       <td>
-                        <Thumbnail
-                          src={https://img.youtube.com/vi/${song.url.split("v=")[1]}/hqdefault.jpg}
-                          alt={song.title}
-                        />
+                      <Thumbnail
+                        src={`https://img.youtube.com/vi/${song.url.split("v=")[1]}/hqdefault.jpg`}
+                         alt={song.title}
+                      />
                       </td>
                       <td>{song.title}</td> {/* Nome da música */}
                       <td>{song.artist}</td> {/* Nome do artista */}

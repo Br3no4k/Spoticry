@@ -21,7 +21,7 @@ const CartaoDePlaylist = ({ playlist, indice }) => {
 
   const aoClicarNaLinha = (playlistId) => {
     if (playlistId) {
-      navegar(/playlist/${playlistId});
+      navegar(`/playlist/${playlistId}`);
     } else {
       console.error("ID da playlist não encontrado.");
     }

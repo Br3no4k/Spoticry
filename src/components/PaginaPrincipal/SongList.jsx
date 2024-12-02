@@ -44,7 +44,7 @@ const ListSongs = () => {
   const getYouTubeThumbnail = (url) => {
     const videoId = getYouTubeVideoId(url);
     return videoId
-      ? https://img.youtube.com/vi/${videoId}/hqdefault.jpg
+      ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
       : 'https://via.placeholder.com/150';
   };
 
@@ -60,7 +60,7 @@ const ListSongs = () => {
           <SongCard key={musica.id}>
             <SongImage
               src={getYouTubeThumbnail(musica.url)}
-              alt={Thumbnail da música ${musica.title}}
+              alt={`Thumbnail da música ${musica.title}`}
             />
             <div>
               <SongTitle>{musica.title}</SongTitle>

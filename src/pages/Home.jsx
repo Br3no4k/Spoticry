@@ -72,7 +72,7 @@ function Home() {
 
   const handlePlaylistClick = (playlistId) => {
     // Redireciona o usuário para a página de detalhes da playlist
-    navigate(/playlist/${playlistId});
+    navigate(`/playlist/${playlistId}`);
   };
 
   // Obtemos as 10 últimas playlists da comunidade e as aleatórias
