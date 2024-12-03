@@ -1,27 +1,31 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom"; // Para navegação
 import styled from "styled-components";
 import { addPlaylist } from "../../services/playlist";
-import { fetchAllSong } from "../../services/songs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Estilos
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  color: #ffff;
+  padding: 30px;
+  color: #fff;
+  background-color: #181818;
+  min-height: 100vh;
 `;
 
 const FormContainer = styled.div`
   width: 100%;
   max-width: 500px;
-  background-color: #121212;
-  padding: 20px;
-  border-radius: 20px;
-  border: 2px solid #ff69b4;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #1f1f1f;
+  padding: 30px;
+  border-radius: 10px;
+  border: 2px solid #ff4d4f;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 const Input = styled.input`
@@ -46,88 +50,94 @@ const Textarea = styled.textarea`
 const SubmitButton = styled.button`
   width: 100%;
   padding: 12px;
-  background-color: #ff69b4;
-  color: white;
+  background-color: #ff4d4f;
   border: none;
-  border-radius: 4px;
-  font-size: 18px;
+  color: white;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
+
   &:hover {
-    background-color: #45a049;
+    background-color: #e04143;
   }
 `;
 
-// Componente principal para criação da playlist
-function AdicionarPlaylist() {
-  const [songs, setSongs] = useState([]);
-  const [selectedSongs, setSelectedSongs] = useState([]);
+const CloseButton = styled.button`
+  width: 100%;
+  padding: 12px;
+  background-color: #333;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #555;
+  }
+`;
+
+function AddPlaylist() {
   const [playlistName, setPlaylistName] = useState("");
   const [playlistDescription, setPlaylistDescription] = useState("");
+  const formRef = useRef(null); // Referência para o formulário
+  const navigate = useNavigate();
 
+  // Função para lidar com o clique fora do formulário
   useEffect(() => {
-    const fetchSongs = async () => {
-      try {
-        const response = await fetchAllSong();
-        if (response && response.songs) {
-          setSongs(response.songs);
-        } else {
-          console.error("Músicas não encontradas na resposta");
-        }
-      } catch (error) {
-        console.error("Erro ao carregar músicas:", error);
+    const handleClickOutside = (e) => {
+      if (formRef.current && !formRef.current.contains(e.target)) {
+        navigate("/homePage"); // Fecha a modal ou redireciona para a página de playlists
       }
     };
 
-    fetchSongs();
-  }, []);
+    document.addEventListener("mousedown", handleClickOutside);
 
+    // Limpa o event listener quando o componente for desmontado
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [navigate]);
+
+  // Função para enviar a nova playlist
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userId = localStorage.getItem("userId");
-
-    const payload = {
-      userId,
-      songs: selectedSongs,
-      description: playlistDescription,
-      name: playlistName,
-    };
+    if (!playlistName || !playlistDescription) {
+      toast.error("Por favor, preencha todos os campos.");
+      return;
+    }
 
     try {
-      const response = await addPlaylist(payload);
+      await addPlaylist({ name: playlistName, description: playlistDescription });
       toast.success("Playlist criada com sucesso!");
-      setPlaylistName("");
-      setPlaylistDescription("");
+      navigate("/homePage");
     } catch (error) {
-      toast.error("Erro ao criar playlist. Tente novamente.");
-      console.error("Erro ao criar playlist:", error);
+      toast.error("Erro ao criar a playlist.");
     }
   };
 
   return (
     <Container>
-      <FormContainer>
-        <h1>Nova Playlist</h1>
-        <form onSubmit={handleSubmit}>
-          <Input
-            type="text"
-            placeholder="Nome da Playlist"
-            value={playlistName}
-            onChange={(e) => setPlaylistName(e.target.value)}
-            required
-          />
-          <Textarea
-            placeholder="Descrição da Playlist"
-            value={playlistDescription}
-            onChange={(e) => setPlaylistDescription(e.target.value)}
-            required
-          />
-          <SubmitButton type="submit">Criar Playlist</SubmitButton>
-        </form>
+      <FormContainer ref={formRef}>
+        <h2>Criar Nova Playlist</h2>
+        <Input
+          type="text"
+          placeholder="Nome da Playlist"
+          value={playlistName}
+          onChange={(e) => setPlaylistName(e.target.value)}
+        />
+        <Textarea
+          placeholder="Descrição da Playlist"
+          value={playlistDescription}
+          onChange={(e) => setPlaylistDescription(e.target.value)}
+        />
+        <SubmitButton onClick={handleSubmit}>Criar Playlist</SubmitButton>
+        <CloseButton onClick={() => navigate("/homePage")}>Cancelar</CloseButton>
       </FormContainer>
       <ToastContainer />
     </Container>
   );
 }
 
-export default AdicionarPlaylist;
+export default AddPlaylist;

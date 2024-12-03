@@ -14,19 +14,22 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 10px;
+ background-color: #121212; 
 `;
 
 const ContainerPrincipal = styled.div`
   width: 80%;
   margin: auto;
+  
 `;
 
 const PlaylistList = styled.div`
-  display: grid;
+  display: contents;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
   margin-top: 2rem;  /* Adiciona espaço entre o título e a lista */
   width: 100%;
+  
 `;
 
 const Title = styled.h2`
@@ -34,6 +37,7 @@ const Title = styled.h2`
   color: #ffffff;
   margin-top: 60px;
   width: 100%;
+  
 `;
 
 function Home() {
@@ -85,9 +89,8 @@ function Home() {
       <Container>
         <ContainerPrincipal>
           <Navbar />
-          {/* Playlists da Comunidade */}
-          <Title>Playlist da Comunidade</Title>
           <PlaylistList>
+          <Title>As melhores Playlists da Comunidade:</Title>
             {communityPlaylists.map((playlist) => (
               <div
                 key={playlist._id}

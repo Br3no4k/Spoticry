@@ -13,10 +13,11 @@ export const Container = styled.div`
 
 // Header da playlist
 export const PlaylistHeader = styled.div`
-  display: flex;
-  align-items: flex-start;
+   display: flex;
   justify-content: space-between;
-  gap: 40px;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 2rem;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -26,31 +27,34 @@ export const PlaylistHeader = styled.div`
 
 // Informações da playlist
 export const PlaylistInfo = styled.div`
-  display: flex;
+   display: flex;
   align-items: center;
-  gap: 20px;
-
+  gap: 15px;
+  justify-content: center; /* Centraliza o conteúdo */
+  
   @media (max-width: 768px) {
     flex-direction: column;
+    gap: 10px;
   }
 `;
 
 // Imagem da playlist
 export const PlaylistImage = styled.img`
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
-  border-radius: 10px;
-  border: 2px solid #ff69b4;
+  border-radius: 8px; /* Borda mais suave */
+  border: 3px solid #ff69b4; /* Cor suave de borda */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Sombra suave para destacar a imagem */
 `;
 
 // Detalhes da playlist
 export const PlaylistDetails = styled.div`
   h1 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: bold;
     color: #ff69b4;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 
   p {
@@ -65,21 +69,17 @@ export const PlaylistDetails = styled.div`
 
 // Botão para sair
 export const LeaveButton = styled.button`
-  background-color: #007bff;
+   background-color: #33bed6; /* Cor vermelha de destaque */
   color: white;
   border: none;
-  padding: 10px;
+  padding: 12px 20px;
   cursor: pointer;
   font-size: 1rem;
-  border-radius: 5px;
-  margin-bottom: 20px;
-
+  border-radius: 15px; /* Borda arredondada */
+  transition: background-color 0.3s ease;
+  
   &:hover {
-    background-color: #0056b3;
-  }
-
-  &:focus {
-    outline: none;
+    background-color: #e04143; /* Efeito ao passar o mouse */
   }
 `;
 
