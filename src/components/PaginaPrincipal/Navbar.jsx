@@ -6,7 +6,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token")// Remove o token do localStorage
+    localStorage.removeItem("token"); // Remove o token do localStorage
     navigate("/"); // Redireciona para a página de login
   };
 
@@ -79,6 +79,6 @@ const LogoutButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #e66988;
+    background-color:#e66988 ;
   }
 `;
