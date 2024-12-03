@@ -1,11 +1,9 @@
 import styled from "styled-components";
-import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/spoticrylogonav.png";
 
 const Navbar = () => {
   const navigate = useNavigate();
-
 
   const handleLogout = () => {
     localStorage.removeItem("token"); // Remove o token do localStorage
@@ -20,12 +18,11 @@ const Navbar = () => {
     navigate("/homePage"); // Redireciona para a página home
   };
 
-  
   return (
     <NavBarContainer>
-      <Logo src={logo} alt=""  onClick={handleHomePage}/>
+      <Logo src={logo} alt="" onClick={handleHomePage} />
       <UserActions>
-        <ProfileIcon onClick={handleProfileClick} />
+        <LibraryLink onClick={handleProfileClick}>Biblioteca</LibraryLink>
         <LogoutButton onClick={handleLogout}>Sair</LogoutButton>
       </UserActions>
     </NavBarContainer>
@@ -45,36 +42,43 @@ const NavBarContainer = styled.nav`
 
 const Logo = styled.img`
   width: 120px;
+  cursor: pointer;
 `;
-
 
 const UserActions = styled.div`
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column; /* Empilha os botões verticalmente */
+  align-items: center; /* Centraliza os botões */
+  gap: 1rem; /* Espaçamento entre os botões */
 `;
 
-const ProfileIcon = styled(FaUserCircle)`
-  font-size: 1.8rem;
-  color: #fffcec;
-  cursor: pointer;
-
-  &:hover {
-    color: #c1beaf;
-  }
-`;
-
-const LogoutButton = styled.button`
-  background-color: #ff4d4f;
+const LibraryLink = styled.span`
+  background-color: #e66988;
   color: #fff;
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 100px;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #e04143;
+    background-color: #33bed6;
+    color: #fff;
+  }
+`;
+
+const LogoutButton = styled.button`
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #e66988;
   }
 `;
