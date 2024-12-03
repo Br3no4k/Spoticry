@@ -23,147 +23,245 @@ const getUserIdFromToken = (token) => {
   }
 };
 
-// Estilos
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  padding: 30px;
-  background-color: #121212;  /* Fundo escuro */
-  min-height: 100vh;
+  padding: 20px;
 `;
 
 const ContainerPrincipal = styled.div`
   width: 100%;
   max-width: 1200px;
   margin-top: 20px;
-  background-color: #1e1e1e;  /* Fundo mais claro para o conteúdo */
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  padding: 20px;
 `;
 
 const SearchBar = styled.input`
-  width: 60%;
-  margin: 20px auto;
-  padding: 12px 20px;
-  border-radius: 30px;
-  border: 1px solid #444;
-  background-color: #2d2d2d;
-  color: white;
-  font-size: 1rem;
-  outline: none;
-
-  &::placeholder {
-    color: #aaa;
-  }
-
-  &:focus {
-    border-color: #ff69b4;  /* Cor de foco */
-  }
+  margin-top: 4%;
+  width: 50%;
+  margin-left: 25%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
 `;
 
 const PaginationButton = styled.button`
-  padding: 12px 24px;
+  padding: 10px 20px;
   background-color: #007bff;
   color: white;
-  font-size: 1rem;
   border: none;
-  border-radius: 30px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
 
-  &:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-  }
-
-  &:active {
-    background-color: #003f7f;
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 `;
 
-const Title = styled.h1`
-  color: #ff69b4;
-  text-align: center;
-  font-size: 2.5rem;
+const PlaylistTable = styled.table`
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+background-color: #3a3838;
+border-radius: 12px;
+overflow: hidden;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+
+td,th {
+  padding: 12px;
+  color:  #ff69b4;
+}
+
+th {
   font-weight: bold;
-  margin-bottom: 20px;
+  font-size: 1.1rem;
+  border-bottom: 2px solid #444;
+  color: #ff69b4 ;
+}
+
+td {
+  font-size: 1rem;
+  border-bottom: 1px solid #333;
+}
+
+tr:hover td {
+  background-color: #2a2a2a;
+}
+
+@media (max-width: 768px) {
+  font-size: 0.9rem;
+}
 `;
 
-const PlaylistListContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  margin-top: 30px;
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
 `;
 
-const PlaylistItem = styled.div`
-  background-color: #2c2c2c;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.2s ease;
+const PaginationInfo = styled.span`
+  font-size: 16px;
+`;
 
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+const PlaylistUser = styled.div`
+  h3 {
+    color: #ffff;
   }
 `;
 
-// Componente Principal
-function Home() {
-  const [playlists, setPlaylists] = useState([]);
-  const navigate = useNavigate(); // Hook para navegação
+const ActionButton = styled.div`
+display: flex;
+gap: 20px;
+`;
 
-  // Função para embaralhar as playlists
-  const shufflePlaylists = (arr) => {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]]; // Troca elementos
+function User() {
+  const [playlists, setPlaylists] = useState([]);
+  const [filteredPlaylists, setFilteredPlaylists] = useState([]);
+  const [feedback, setFeedback] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar a modal
+  const [isEditSongModalOpen, setIsEditSongModalOpen] = useState(false); // Estado para controlar a modal de edição de música
+  const itemsPerPage = 10;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userId = getUserIdFromToken(token);
+
+    if (!userId) {
+      setFeedback("Erro: Usuário não autenticado.");
+      return;
     }
-    return arr;
+
+    axios
+      .get(
+        `https://mqjnto3qw2.execute-api.us-east-1.amazonaws.com/default/playlist/user/${userId}/playlists`,
+        {
+          headers: { Authorization: token },
+        }
+      )
+      .then((res) => {
+        setPlaylists(res.data.playlists || []);
+        setFilteredPlaylists(res.data.playlists || []);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar playlists do usuário:", err);
+        setFeedback("Erro ao carregar suas playlists.");
+      });
+  }, []);
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+    clearTimeout(window.searchTimeout);
+    window.searchTimeout = setTimeout(() => {
+      const filtered = playlists.filter(
+        (playlist) =>
+          playlist._name.toLowerCase().includes(query) ||
+          playlist._description.toLowerCase().includes(query)
+      );
+      setFilteredPlaylists(filtered);
+      setCurrentPage(0);
+    }, 500);
   };
 
-  // Chamada para buscar playlists da API
-  useEffect(() => {
-    async function loadPlaylists() {
-      try {
-        const response = await axios.get('API_URL');
-        setPlaylists(shufflePlaylists(response.data)); // Embaralha as playlists
-      } catch (error) {
-        console.error('Erro ao carregar playlists:', error);
-      }
+  const handleNextPage = () => {
+    if ((currentPage + 1) * itemsPerPage < filteredPlaylists.length) {
+      setCurrentPage(currentPage + 1);
     }
+  };
 
-    loadPlaylists();
-  }, []);
+  const handlePreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const startIndex = currentPage * itemsPerPage;
+  const paginatedPlaylists = filteredPlaylists.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   return (
     <>
-      <Navbar />
+      <GlobalStyled />
       <Container>
         <ContainerPrincipal>
-          <Title>Playlists da Comunidade</Title>
+          <Navbar />
+          {/* Barra de busca */}
+          <SearchBar
+            type="text"
+            placeholder="Pesquise sua musica aqui..."
+            value={searchQuery}
+            onChange={handleSearch}
+          />
 
-          {/* Barra de pesquisa */}
-          <SearchBar placeholder="Pesquise por playlists..." />
+          {feedback && <p>{feedback}</p>}
 
-          {/* Lista de playlists */}
-          <PlaylistListContainer>
-            {playlists.map((playlist) => (
-              <PlaylistItem key={playlist.id}>
-                <PlaylistTb playlist={playlist} />
-              </PlaylistItem>
-            ))}
-          </PlaylistListContainer>
+          <PlaylistUser>
+            <div>
+              <h3>Minhas Playlists</h3>
+              {/* Botões de ações */}
+              <PaginationButton onClick={() => setIsModalOpen(true)}>
+                Adicionar Playlist
+              </PaginationButton>
+              <ActionButton>
+              <AddSongButton /> {/* Aqui está o botão para adicionar música */}
+              <EditSongsComponent/>
+              <RemoveSongsComponent />
+              </ActionButton>
 
-          {/* Botão de paginação */}
-          <PaginationButton onClick={() => alert('Paginando...')}>Próxima Página</PaginationButton>
+            </div>
+
+            <PlaylistTable>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Imagem</th>
+                  <th>Nome</th>
+                  <th>Descrição</th>
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedPlaylists.map((playlist, index) => (
+                  <PlaylistTb key={playlist._id} playlist={playlist} index={startIndex + index} />
+                ))}
+              </tbody>
+            </PlaylistTable>
+          </PlaylistUser>
+
+          <PaginationContainer>
+            <PaginationButton
+              onClick={handlePreviousPage}
+              disabled={currentPage === 0}
+            >
+              Anterior
+            </PaginationButton>
+            <PaginationInfo>
+              Página {currentPage + 1} de{" "}
+              {Math.ceil(filteredPlaylists.length / itemsPerPage)}
+            </PaginationInfo>
+            <PaginationButton
+              onClick={handleNextPage}
+              disabled={(currentPage + 1) * itemsPerPage >= filteredPlaylists.length}
+            >
+              Próxima
+            </PaginationButton>
+          </PaginationContainer>
         </ContainerPrincipal>
+
+        {/* Modal Adicionar Playlist */}
+        {isModalOpen && (
+          <AdicionarPlaylist closeModal={() => setIsModalOpen(false)} />
+        )}
       </Container>
     </>
   );
 }
 
-export default Home;
+export default User;
