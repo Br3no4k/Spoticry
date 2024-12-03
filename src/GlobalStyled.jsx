@@ -20,6 +20,7 @@ body, html {
   background-size: cover;
   background-position: center;
   width: 100%;
+
 }
 
 

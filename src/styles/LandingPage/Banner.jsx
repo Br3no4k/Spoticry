@@ -1,20 +1,32 @@
 import styled from "styled-components";
 
 export const BannerContainer = styled.div`
- position: fixed;
+  position: relative; /* Modificado de fixed para relative */
   display: flex;
   flex-direction: row; /* Alinha os itens na horizontal */
   align-items: center; /* Alinha os itens verticalmente no centro */
   justify-content: space-between; /* Espaço entre os itens */
-  padding: 400px;
+  padding: 200px; /* Ajuste para responsividade */
   margin-top: 0%;
   width: 100%; /* Agora o container ocupa toda a largura disponível */
+  z-index: 10; /* Garante que fique acima de outros elementos, mas não sobreponha outros com z-index maior */
+
+  @media (max-width: 768px) {
+    padding: 100px; /* Diminui o padding em telas menores */
+    flex-direction: column; /* Coloca os itens em coluna em telas menores */
+    text-align: center; /* Centraliza o texto em telas menores */
+  }
 `;
 
 export const BannerContent = styled.div`
   text-align: left; /* Alinha o texto à esquerda */
   margin-bottom: 20px;
   flex: 1; /* O texto ocupará o espaço restante */
+
+  @media (max-width: 768px) {
+    text-align: center; /* Centraliza o texto em telas menores */
+    margin-bottom: 10px; /* Ajusta a margem inferior em telas menores */
+  }
 `;
 
 export const BannerTitle = styled.h1`
@@ -42,4 +54,3 @@ export const ImageBanner = styled.div`
     height: auto; /* Mantém a proporção da imagem */
   }
 `;
-

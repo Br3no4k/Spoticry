@@ -12,11 +12,8 @@ const Navbar = () => {
   return (
     <NavbarContainer>
       <Logo src={logo} alt="logo" />
-      <NavLinks>
-        <NavLink to="/">HOME</NavLink>
-      </NavLinks>
-      <NavLinkLogin to="/loginPage">
-        <BsPersonCircle /> Login
+     <NavLinkLogin to="/loginPage">
+        Login
       </NavLinkLogin>
     </NavbarContainer>
   );
